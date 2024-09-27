@@ -1,0 +1,29 @@
+.my-component{
+    display: flex;
+    flex-direction: column;
+}
+
+.top_flexbox{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between ;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+.grid_container {
+    display: grid;
+    grid-template-columns: 1px repeat(8, 1fr);
+    gap:1px
+}
+
+.firstrow {
+    grid-row: 1; 
+    text-align: center;
+}
+
+.firstcol {
+    grid-column: 1; 
+    text-align: center;
+    
+}
+
