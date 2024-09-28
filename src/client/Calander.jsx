@@ -1,20 +1,23 @@
 // Import necessary libraries
-import React from 'react';
+import React, { useState } from 'react';
 import './Clientsidecss/Calander.css';
 
 // Define the component
 const MyComponent = () => {
   // Define the weekdays array
-  const currentDate = new Date();
+  const [currentDate,setCurrentDate] =useState(new Date())
   const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1;
-  const currday = currentDate.getDate();
+  const month = currentDate.getMonth();
+  const currday = currentDate.getDay();
+
 
 
   const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const month_key =["January","Febuary","March","April","May","June","July","Augest","September","October","November","December"]
   const dayName = weekDays[currday];
   const W_month =month_key[month]
+ 
+  
 
   const generateDailyTimes = () => {
     const times = [];
@@ -39,38 +42,57 @@ const MyComponent = () => {
     return times;
   };
 
-  const getCurrentWeek = () => {
-    const currentDate = new Date();
-    const currentDay = currentDate.getDay(); 
-    
+  const getCurrentWeek = (flag) => {
+    const startOfWeek = new Date(currentDate); 
+    const currentDay = startOfWeek.getDay();
     const week = []; 
 
+    if (flag === "currweek") {
+        startOfWeek.setDate(currentDate.getDate() - currentDay); 
+      } else if (flag === "lastweek") {
+        startOfWeek.setDate(currentDate.getDate() - currentDay - 7); 
+        setCurrentDate(startOfWeek);
+
+      } else {
+        startOfWeek.setDate(currentDate.getDate() - currentDay + 7); 
+        setCurrentDate(startOfWeek);
+      }
     
-    const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - currentDay); 
 
     for (let i = 0; i < 7; i++) {
-        const date = new Date(startOfWeek); 
+        const date = new Date(startOfWeek);
+        
         date.setDate(startOfWeek.getDate() + i);
+        
         week.push(date.getDate()); 
     }
+        
+    
+    
 
     return week;
-};
+    };
+
+    const [week,setWeek]=useState(getCurrentWeek("currweek")); 
+    console.log(week)
+
+    const setweek =(flag)=>{
+        setWeek(getCurrentWeek(flag))
+
+
+    }
 
 // Example usage
-const week = getCurrentWeek();
-
 
 
   const hours = generateDailyTimes(); 
   return (
     <div className="my-component">
       <div className='top_flexbox'>
-        <button>Back</button>
+        <button onClick={()=>setweek("lastweek")}>Back</button>
         <h2>Month:{W_month}</h2>
         <h2>Year:{year}</h2>
-        <button>Next</button> 
+        <button onClick={()=> setweek("nextweek")}>Next</button> 
       </div>
       {/* Grid container */}
       <div className="grid_container">
@@ -83,7 +105,7 @@ const week = getCurrentWeek();
 
         {/* First column (hours) */}
         {hours.map((time, index) => {
-  console.log("Time value:", time);  // This will log the value of `time` to the browser console
+ 
   
   return (
     <div className="firstcol" key={index} style={{ gridRow: `${index + 3}` }}>
